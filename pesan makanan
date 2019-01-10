@@ -1,0 +1,421 @@
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+using namespace std;
+
+
+
+struct makanan {
+	int no_makan;
+	string nama_makanan;
+	int harga;
+	string deskripsi;
+	string Tempat;
+};
+
+struct menu {
+	makanan mkn;
+	int jumlah_orang;
+};
+
+typedef menu infotype;
+typedef struct tNode *address;
+typedef struct tNode
+{
+	infotype Info;
+	address Next;
+}Node;
+
+typedef Node *List; // tipe data untuk list utama
+
+void CreateEmpty(List &L);
+
+bool IsEmpty(List L);
+
+bool IsOneElmt(List L);
+
+void InsertFirst(List &L, address P);
+
+void InsertAfter(List &L, address Prec, address P);
+
+void InsertLast(List &L, address P);
+
+address Alokasi(infotype X);
+
+void PrintInfoMenu(List L, int n);
+
+void PrintInfoMakanan(makanan data_makanan[]);
+
+void DelFirst(List &L);
+
+void DelLast(List &L);
+
+void DelAt(List &L, address P);
+
+void DelOf(List &L, infotype X);
+
+int countListEl(List L);
+
+
+
+
+int main()
+{
+	int pil_menu = 0;
+	int pil_no_menu = 0;
+	int no_urut_menu_edit= 0;
+	int no_urut_menu_delete = 0;
+	menu restoran;
+
+	List ListMakanan;
+	CreateEmpty(ListMakanan);
+
+
+	makanan data_makanan[5];
+
+	data_makanan[0].no_makan = 1;
+	data_makanan[0].nama_makanan = "Makanan Wong edan";
+	data_makanan[0].harga = 80000;
+	data_makanan[0].deskripsi= "Nasi , Susu , Danging Kmabil ,";
+	data_makanan[0].Tempat = "Warung Lombok Ijo ";
+
+	data_makanan[1].no_makan = 2;
+	data_makanan[1].nama_makanan = "Makanan Wong Stres";
+	data_makanan[1].harga = 120000;
+	data_makanan[1].deskripsi= "Nasi , Gulai kambil , Sate Kambing , Oseng-oseng Mercon , Soda Gembira";
+	data_makanan[1].Tempat = "Warung Lombok Ijo ";
+
+	data_makanan[2].no_makan = 3;
+	data_makanan[2].nama_makanan = "Makanan Wong Gila ";
+	data_makanan[2].harga = 150000;
+	data_makanan[2].deskripsi= "Nasi , Gulai kambil , Sate Kambing , Oseng-oseng Mercon , Soda Gembira , Gurameh Bakar , Kepala kambing";
+	data_makanan[2].Tempat = "Warung Lombok Ijo ";
+
+	data_makanan[3].no_makan = 4;
+	data_makanan[3].nama_makanan = "Makanan Wong Setngah";
+	data_makanan[3].harga = 130000;
+	data_makanan[3].deskripsi= "Nasi , Susu , Danging ,soto ,rica-rica ,nasi goreng ,mie goreng ,mie godog,mie jowo,mie setan";
+	data_makanan[3].Tempat = "Warung Lombok Ijo ";
+
+	data_makanan[4].no_makan = 5;
+	data_makanan[4].nama_makanan = "Makanan wong sugeh";
+	data_makanan[4].harga = 110000;
+	data_makanan[4].deskripsi= "Bakso,Soto ,mie ayam , Rawon ,omelet ,bakso klenger,";
+	data_makanan[4].Tempat = "Warung Lombok Ijo ";
+	do
+	{
+		system("cls");
+		cout <<"============================================\n\n";
+		cout << "===== Aplikasi Watoon ew Wareg =====\n";
+		cout <<"============================================\n";
+		cout << "\n=====         M E N U            =====";
+		cout << "\n1. Pesan Makanana";
+		cout << "\n2. Lihat Data Makanan";
+		cout << "\n3. Ubah Makanan";
+		cout << "\n4. Hapus Makanan";
+		cout << "\n5. Keluar Aplikasi";
+		cout << "\n======================================";
+		cout << "\nMasukkan menu yang Anda inginkan: ";
+		cin >> pil_menu;
+
+		switch (pil_menu)
+		{
+		case 1:
+			system("cls");
+			cout << "===== Tambah Makanan =====";
+			PrintInfoMakanan(data_makanan);
+
+			do
+			{
+				cout << "\nMasukkan nomor menu yang anda inginkan: ";
+				cin >> pil_no_menu;
+
+				if (pil_no_menu < 1 || pil_no_menu > 5)
+				{
+					cout << "Nomor menu tidak tersedia... \n";
+				}
+			} while (pil_no_menu < 1 || pil_no_menu > 5);
+
+
+			if (pil_no_menu>=1 && pil_no_menu<=5)
+			{
+				cout << "Masukkan jumlah orang : ";
+				cin >> restoran.jumlah_orang;
+				restoran.mkn = data_makanan[pil_no_menu - 1];
+				address menuBaru = Alokasi(restoran);
+				InsertLast(ListMakanan, menuBaru);
+
+				cout << "\n\nMakanan Berhasil Ditambahkan Ke Menu ...";
+			}
+			else
+			{
+				cout << "\nLogical Error....";
+			}
+			break;
+		case 2:
+			system("cls");
+			cout << "=====  Data   =====";
+			if (!IsEmpty(ListMakanan))
+			{
+				cout << "\nData Rute : ";
+				PrintInfoMenu(ListMakanan, 1);
+			}
+			else
+			{
+				cout << "\nAnda belum membuat menu";
+			}
+			break;
+		case 3:
+			system("cls");
+			cout << "=====    UBAH MENU MAKANAN     =====";
+			if (!IsEmpty(ListMakanan))
+			{
+				cout << "\nMakanan yang Anda Pesan: ";
+				PrintInfoMenu(ListMakanan, 1);
+
+				do
+				{
+					cout << "\nMasukkan Urutan Yang Akan Diubah: ";
+					cin >> no_urut_menu_edit;
+				} while (no_urut_menu_edit>countListEl(ListMakanan) || no_urut_menu_edit<1);
+				cout << endl << endl;
+
+
+				#pragma region Sama Seperti Input Awal
+				PrintInfoMakanan(data_makanan);
+
+				do
+				{
+					cout << "\nMasukkan nomor menu yang anda inginkan: ";
+					cin >> pil_no_menu;
+
+					if (pil_no_menu < 1 || pil_no_menu > 5)
+					{
+						cout << "Nomor Makanan Tidak Tersedia... \n";
+					}
+				} while (pil_no_menu < 1 || pil_no_menu > 5);
+
+
+				if (pil_no_menu >= 1 && pil_no_menu <= 5)
+				{
+					cout << "Masukkan jumlah orang yang mau pesan: ";
+					cin >> restoran.jumlah_orang;
+					restoran.mkn = data_makanan[pil_no_menu - 1];
+					address menBaru = Alokasi(restoran);
+
+					if (no_urut_menu_edit == 1)
+					{
+						address temp = ListMakanan;
+						menBaru->Next = temp->Next;
+                        ListMakanan = menBaru;
+						delete(temp);
+					}
+					else
+					{
+						address temp_prec = ListMakanan;
+						for (int i = 0; i < no_urut_menu_edit-2; i++)
+						{
+							temp_prec = temp_prec->Next;
+						}
+						menBaru->Next = temp_prec->Next->Next;
+						address temp = temp_prec->Next;
+						temp_prec->Next = menBaru;
+						delete(temp);
+					}
+
+					cout << "\n\n berhasil dirubah...";
+				}
+				#pragma endregion
+
+
+			}
+			else
+			{
+				cout << "\nAnda belum memilih menu untuk diubah";
+			}
+			break;
+		case 4:
+			system("cls");
+			cout << "=====      Hapus Makanan        =====";
+			if (!IsEmpty(ListMakanan))
+			{
+				cout << "\nmanu yang anda pesan: ";
+				PrintInfoMenu(ListMakanan, 1);
+
+				do
+				{
+					cout << "\nMasukkan no urut rute yang akan dihapus: ";
+					cin >> no_urut_menu_delete;
+				} while (no_urut_menu_delete>countListEl(ListMakanan) || no_urut_menu_delete<1);
+				cout << endl << endl;
+
+				address temp_del = ListMakanan;
+				for (int i = 0; i < no_urut_menu_delete-1; i++)
+				{
+					temp_del = temp_del->Next;
+				}
+
+				DelAt(ListMakanan, temp_del);
+
+				cout << "\n\nmenu berhasil dihapus...";
+
+			}
+			else
+			{
+				cout << "\nBelum ada menu";
+			}
+			break;
+		case 5:
+			system("cls");
+			cout << "=====     SAMPAI JUMPA LAGI      =====";
+			break;
+		default:
+			system("cls");
+			break;
+		}
+
+		cout << endl;
+		system("pause");
+	} while (pil_menu!=5);
+
+
+	if (pil_menu!=5)
+	{
+		cout << endl;
+		system("pause");
+	}
+	return 0;
+}
+
+
+void CreateEmpty(List &L)
+{
+	L = NULL;
+}
+
+bool IsEmpty(List L)
+{
+	return(L == NULL);
+}
+
+bool IsOneElmt(List L)
+{
+	return(IsEmpty(L->Next));
+}
+
+void InsertFirst(List &L, address P)
+{
+	P->Next = L;
+	L = P;
+}
+
+void InsertAfter(List &L, address Prec, address P)
+{
+	P->Next = Prec->Next;
+	Prec->Next = P;
+}
+
+void InsertLast(List &L, address P)
+{
+	if (IsEmpty(L))             //basis 0
+		InsertFirst(L, P);
+	else if (IsOneElmt(L))      //basis 1
+		InsertAfter(L, L, P);
+	else
+		InsertLast(L->Next, P);  //rekurens
+}
+
+address Alokasi(infotype X)
+{
+	address P = new(Node);
+	if (P == NULL)      //alokasi gagal
+		return NULL;
+	else             //alokasi berhasil
+	{
+		P->Info = X;
+		P->Next = NULL;
+		return P;
+	}
+}
+
+void PrintInfoMakanan(makanan data_makanan[])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		cout << "\nNo Makanan     : " << data_makanan[i].no_makan;
+		cout << "\nNama Makanan   : " << data_makanan[i].nama_makanan;
+		cout << "\nStasius Berangkat   : " << data_makanan[i].Tempat;
+		cout << "\nMenu yang anda Pesan : "<< data_makanan[i].deskripsi;
+		cout << "\nHarga         : Rp" << data_makanan[i].harga;
+		cout << "\n-------------------------------------------------------------------------------";
+	}
+
+}
+
+void PrintInfoMenu(List L, int n)
+{
+	if (IsEmpty(L))		//basis
+	{ //no action
+	}
+	else			//rekurens
+	{
+		cout << "\nNo Urut. " << n;
+		cout << "\nNama Makanan\t: " << L->Info.mkn.nama_makanan;
+		cout << "\nHarga\t\t: " << L->Info.mkn.harga;
+		cout << "\nJumlah orang\t: " << L->Info.jumlah_orang;
+		cout << "\nTempat: " << L->Info.mkn.Tempat;
+		cout << "\n----------->>>>>>>>>>>>>>>>>>>";
+		PrintInfoMenu(L->Next, n+1);
+	}
+}
+
+void DelFirst(List &L)
+{
+	address P;
+	P = L;
+	L = L->Next;
+	delete(P); //mendealokasi dari memori
+}
+
+void DelLast(List &L)
+{
+	if (IsOneElmt(L))
+		DelFirst(L);
+	else
+		DelLast(L->Next);
+}
+
+void DelAt(List &L, address P)
+{
+	if (!IsEmpty(L))
+	{
+		if (L == P)
+			DelFirst(L);
+		else
+			DelAt(L->Next, P);
+	}
+}
+
+void DelOf(List &L, infotype X)
+{
+	//if (!IsEmpty(L))
+	//{
+		//if (L->Info == X)
+			//DelFirst(L);
+		//else
+			//DelOf(L->Next, X);
+	}
+//}
+
+
+int countListEl(List L)
+{
+
+	int jmlel = 0;
+	while (!IsEmpty(L))
+	{
+		++jmlel;
+		L = L->Next;
+	}
+	return jmlel;
+}
